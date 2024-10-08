@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TempLaboClini.Application\TempLaboClini.Application.csproj" />
+    <ProjectReference Include="..\TempLaboClini.Domain\TempLaboClini.Domain.csproj" />
+    <ProjectReference Include="..\TempLaboClini.Infrastructure\TempLaboClini.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
