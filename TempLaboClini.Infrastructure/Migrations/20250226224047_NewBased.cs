@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TempLaboClini.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class NuevaBD : Migration
+    public partial class NewBased : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,10 +18,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CodigoArea = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NombreArea = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    NombreArea = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,11 +26,25 @@ namespace TempLaboClini.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Direccion",
+                name: "BaseEntity",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BaseEntity", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Direccion",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     TipoVia = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     NombreVia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     NumeroPuerta = table.Column<int>(type: "int", nullable: false),
@@ -48,47 +59,30 @@ namespace TempLaboClini.Infrastructure.Migrations
                     Departamento = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     CodigoPostal = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Telefono = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Direccion", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Muestras",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreMuestra = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Muestras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Direccion_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Examenes",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     AreaId = table.Column<long>(type: "bigint", nullable: false),
                     CodigoSOAT = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SignificanciaClinica = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Precio = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
-                    CodigoCUPS = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    Precio = table.Column<decimal>(type: "decimal(12,2)", precision: 18, scale: 2, nullable: false),
+                    CodigoCUPS = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,6 +91,30 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_Examenes_Areas_AreaId",
                         column: x => x.AreaId,
                         principalTable: "Areas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Examenes_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Muestras",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    NombreMuestra = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Muestras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Muestras_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -109,10 +127,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CodigoAseguradora = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NombreAseguradora = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DireccionId = table.Column<long>(type: "bigint", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    DireccionId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,28 +141,56 @@ namespace TempLaboClini.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Personas",
+                name: "Persona",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     NroIdentificacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Apellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SegundoApellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     DireccionId = table.Column<long>(type: "bigint", nullable: false),
-                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Personas", x => x.Id);
+                    table.PrimaryKey("PK_Persona", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Personas_Direccion_DireccionId",
+                        name: "FK_Persona_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Persona_Direccion_DireccionId",
                         column: x => x.DireccionId,
                         principalTable: "Direccion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pruebas",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    ExamenId = table.Column<long>(type: "bigint", nullable: false),
+                    NombrePrueba = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Agrupado = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pruebas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pruebas_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Pruebas_Examenes_ExamenId",
+                        column: x => x.ExamenId,
+                        principalTable: "Examenes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -156,17 +199,19 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "ExamenesMuestras",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     ExamenId = table.Column<long>(type: "bigint", nullable: false),
-                    MuestraId = table.Column<long>(type: "bigint", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    MuestraId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExamenesMuestras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamenesMuestras_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ExamenesMuestras_Examenes_ExamenId",
                         column: x => x.ExamenId,
@@ -177,30 +222,6 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_ExamenesMuestras_Muestras_MuestraId",
                         column: x => x.MuestraId,
                         principalTable: "Muestras",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pruebas",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExamenId = table.Column<long>(type: "bigint", nullable: false),
-                    NombrePrueba = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Agrupado = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pruebas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Pruebas_Examenes_ExamenId",
-                        column: x => x.ExamenId,
-                        principalTable: "Examenes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -217,15 +238,15 @@ namespace TempLaboClini.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Medico", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Medico_Personas_Id",
+                        name: "FK_Medico_Persona_Id",
                         column: x => x.Id,
-                        principalTable: "Personas",
+                        principalTable: "Persona",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pacientes",
+                name: "Paciente",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -234,17 +255,17 @@ namespace TempLaboClini.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pacientes", x => x.Id);
+                    table.PrimaryKey("PK_Paciente", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pacientes_Personas_Id",
+                        name: "FK_Paciente_Persona_Id",
                         column: x => x.Id,
-                        principalTable: "Personas",
+                        principalTable: "Persona",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PersonalLaboratorios",
+                name: "PersonalLaboratorio",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -253,17 +274,17 @@ namespace TempLaboClini.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PersonalLaboratorios", x => x.Id);
+                    table.PrimaryKey("PK_PersonalLaboratorio", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PersonalLaboratorios_Personas_Id",
+                        name: "FK_PersonalLaboratorio_Persona_Id",
                         column: x => x.Id,
-                        principalTable: "Personas",
+                        principalTable: "Persona",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Usuarios",
+                name: "Usuario",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -274,11 +295,11 @@ namespace TempLaboClini.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.PrimaryKey("PK_Usuario", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Usuarios_Personas_Id",
+                        name: "FK_Usuario_Persona_Id",
                         column: x => x.Id,
-                        principalTable: "Personas",
+                        principalTable: "Persona",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -287,24 +308,26 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "ValoresReferencia",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     PruebaId = table.Column<long>(type: "bigint", nullable: false),
                     TipoReferencia = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ValorMinimo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ValorMaximo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    EdadMinimaAnios = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    EdadMaximaAnios = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ValorMinimo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, precision: 18, scale: 2, nullable: false),
+                    ValorMaximo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, precision: 18, scale: 2, nullable: false),
+                    EdadMinimaAnios = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    EdadMaximaAnios = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Sexo = table.Column<string>(type: "nvarchar(1)", nullable: false),
                     Unidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Interpretacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    Interpretacion = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ValoresReferencia", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ValoresReferencia_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ValoresReferencia_Pruebas_PruebaId",
                         column: x => x.PruebaId,
@@ -317,18 +340,14 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "SolicitudesExamen",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     NroRegistro = table.Column<int>(type: "int", nullable: false),
                     PacienteId = table.Column<long>(type: "bigint", nullable: false),
                     AseguradoraId = table.Column<long>(type: "bigint", nullable: false),
                     MedicoId = table.Column<long>(type: "bigint", nullable: false),
                     IngresoPor = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     FechaSolicitud = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaRecepcion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    FechaRecepcion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -340,15 +359,21 @@ namespace TempLaboClini.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_SolicitudesExamen_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_SolicitudesExamen_Medico_MedicoId",
                         column: x => x.MedicoId,
                         principalTable: "Medico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SolicitudesExamen_Pacientes_PacienteId",
+                        name: "FK_SolicitudesExamen_Paciente_PacienteId",
                         column: x => x.PacienteId,
-                        principalTable: "Pacientes",
+                        principalTable: "Paciente",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -357,21 +382,23 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "ExamenesSolicitados",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     SolicitudExamenId = table.Column<long>(type: "bigint", nullable: false),
                     ExamenId = table.Column<long>(type: "bigint", nullable: false),
                     PersonalLaboratorioId = table.Column<long>(type: "bigint", nullable: true),
                     EstadoMuestra = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResultadoExamen = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaResultado = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    FechaResultado = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExamenesSolicitados", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamenesSolicitados_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ExamenesSolicitados_Examenes_ExamenId",
                         column: x => x.ExamenId,
@@ -379,9 +406,9 @@ namespace TempLaboClini.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ExamenesSolicitados_PersonalLaboratorios_PersonalLaboratorioId",
+                        name: "FK_ExamenesSolicitados_PersonalLaboratorio_PersonalLaboratorioId",
                         column: x => x.PersonalLaboratorioId,
-                        principalTable: "PersonalLaboratorios",
+                        principalTable: "PersonalLaboratorio",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ExamenesSolicitados_SolicitudesExamen_SolicitudExamenId",
@@ -395,18 +422,20 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "Facturas",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     NroFactura = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Monto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    SolicitudExamenId = table.Column<long>(type: "bigint", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    Monto = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    SolicitudExamenId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Facturas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Facturas_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Facturas_SolicitudesExamen_SolicitudExamenId",
                         column: x => x.SolicitudExamenId,
@@ -419,40 +448,39 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "Resultados",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     ExamenSolicitadoId = table.Column<long>(type: "bigint", nullable: false),
                     PersonalLaboratorioId = table.Column<long>(type: "bigint", nullable: false),
                     ResultadoValor = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ResultadoTexto = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Observaciones = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     ValorReferenciaId = table.Column<long>(type: "bigint", nullable: false),
-                    FechaResultado = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Eliminado = table.Column<bool>(type: "bit", nullable: false)
+                    FechaResultado = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Resultados", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Resultados_ExamenesSolicitados_ExamenSolicitadoId",
-                        column: x => x.ExamenSolicitadoId,
-                        principalTable: "ExamenesSolicitados",
+                        name: "FK_Resultados_BaseEntity_Id",
+                        column: x => x.Id,
+                        principalTable: "BaseEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Resultados_PersonalLaboratorios_PersonalLaboratorioId",
+                        name: "FK_Resultados_ExamenesSolicitados_ExamenSolicitadoId",
+                        column: x => x.ExamenSolicitadoId,
+                        principalTable: "ExamenesSolicitados",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Resultados_PersonalLaboratorio_PersonalLaboratorioId",
                         column: x => x.PersonalLaboratorioId,
-                        principalTable: "PersonalLaboratorios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "PersonalLaboratorio",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Resultados_ValoresReferencia_ValorReferenciaId",
                         column: x => x.ValorReferenciaId,
                         principalTable: "ValoresReferencia",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -496,8 +524,8 @@ namespace TempLaboClini.Infrastructure.Migrations
                 column: "SolicitudExamenId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Personas_DireccionId",
-                table: "Personas",
+                name: "IX_Persona_DireccionId",
+                table: "Persona",
                 column: "DireccionId");
 
             migrationBuilder.CreateIndex(
@@ -554,7 +582,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "Resultados");
 
             migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "Usuario");
 
             migrationBuilder.DropTable(
                 name: "Muestras");
@@ -566,7 +594,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "ValoresReferencia");
 
             migrationBuilder.DropTable(
-                name: "PersonalLaboratorios");
+                name: "PersonalLaboratorio");
 
             migrationBuilder.DropTable(
                 name: "SolicitudesExamen");
@@ -581,19 +609,22 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "Medico");
 
             migrationBuilder.DropTable(
-                name: "Pacientes");
+                name: "Paciente");
 
             migrationBuilder.DropTable(
                 name: "Examenes");
 
             migrationBuilder.DropTable(
-                name: "Personas");
+                name: "Persona");
 
             migrationBuilder.DropTable(
                 name: "Areas");
 
             migrationBuilder.DropTable(
                 name: "Direccion");
+
+            migrationBuilder.DropTable(
+                name: "BaseEntity");
         }
     }
 }

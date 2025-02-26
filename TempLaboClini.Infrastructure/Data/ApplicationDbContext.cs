@@ -54,23 +54,23 @@ namespace TempLaboClini.Infrastructure.Data
                 .HasForeignKey(p => p.DireccionId);
 
 
-            modelBuilder.Entity<SolicitudExamen>() 
-                .HasOne(se => se.Paciente)
-                .WithMany()
-                .HasForeignKey(se => se.PacienteId)
-                .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
+            //modelBuilder.Entity<SolicitudExamen>() 
+            //    .HasOne(se => se.Paciente)
+            //    .WithMany()
+            //    .HasForeignKey(se => se.PacienteId)
+            //    .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
 
-            modelBuilder.Entity<SolicitudExamen>()
-                .HasOne(se => se.Aseguradora)
-                .WithMany()
-                .HasForeignKey(se => se.AseguradoraId)
-                .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
+            //modelBuilder.Entity<SolicitudExamen>()
+            //    .HasOne(se => se.Aseguradora)
+            //    .WithMany()
+            //    .HasForeignKey(se => se.AseguradoraId)
+            //    .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
 
-            modelBuilder.Entity<SolicitudExamen>()
-                .HasOne(se => se.Medico)
-                .WithMany()
-                .HasForeignKey(se => se.MedicoId)
-                .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
+            //modelBuilder.Entity<SolicitudExamen>()
+            //    .HasOne(se => se.Medico)
+            //    .WithMany()
+            //    .HasForeignKey(se => se.MedicoId)
+            //    .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
 
             modelBuilder.Entity<ExamenSolicitado>()
                 .HasOne(es => es.SolicitudExamen)
@@ -109,35 +109,33 @@ namespace TempLaboClini.Infrastructure.Data
                 .WithMany(d => d.Personas)
                 .HasForeignKey(p => p.DireccionId);
 
-
             // Configurar la precisión y el tipo de columna para PrecioExamen
             modelBuilder.Entity<Examen>()
                 .Property(e => e.Precio)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             // Configurar la precisión y el tipo de columna para Monto
             modelBuilder.Entity<Factura>()
                 .Property(f => f.Monto)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             // Configurar la precisión y el tipo de columna para EdadMaximaAnios
             modelBuilder.Entity<ValorReferencia>()
                 .Property(vr => vr.EdadMaximaAnios)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             // Configurar la precisión y el tipo de columna para otras propiedades decimal en ValorReferencia
             modelBuilder.Entity<ValorReferencia>()
                 .Property(vr => vr.EdadMinimaAnios)
-                .HasColumnType("decimal(18,2)");
-
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<ValorReferencia>()
                 .Property(vr => vr.ValorMinimo)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<ValorReferencia>()
                 .Property(vr => vr.ValorMaximo)
-            .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             // Configurar auditoría automática (opcional)
             modelBuilder.Entity<BaseEntity>()

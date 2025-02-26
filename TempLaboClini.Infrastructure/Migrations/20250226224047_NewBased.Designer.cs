@@ -12,8 +12,8 @@ using TempLaboClini.Infrastructure.Data;
 namespace TempLaboClini.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250226031529_NuevaBD")]
-    partial class NuevaBD
+    [Migration("20250226224047_NewBased")]
+    partial class NewBased
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TempLaboClini.Domain.Entities.Area", b =>
+            modelBuilder.Entity("TempLaboClini.Domain.Entities.BaseEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,33 +33,42 @@ namespace TempLaboClini.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("CodigoArea")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Eliminado")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BaseEntity");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("TempLaboClini.Domain.Entities.Area", b =>
+                {
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
+
+                    b.Property<string>("CodigoArea")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreArea")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
 
                     b.ToTable("Areas");
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Aseguradora", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<string>("CodigoAseguradora")
                         .HasColumnType("nvarchar(max)");
@@ -67,19 +76,8 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<long>("DireccionId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("NombreAseguradora")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("DireccionId");
 
@@ -88,11 +86,7 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Direccion", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<string>("Apartamento")
                         .HasMaxLength(20)
@@ -122,18 +116,9 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Email")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Manzana")
                         .HasMaxLength(20)
@@ -162,18 +147,12 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
-
                     b.ToTable("Direccion");
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Examen", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<long>("AreaId")
                         .HasColumnType("bigint");
@@ -184,25 +163,15 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<string>("CodigoSOAT")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(12, 2)");
 
                     b.Property<string>("SignificanciaClinica")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("AreaId");
 
@@ -211,28 +180,13 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.ExamenMuestra", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<long>("ExamenId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
                     b.Property<long>("MuestraId")
                         .HasColumnType("bigint");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("ExamenId");
 
@@ -243,26 +197,13 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.ExamenSolicitado", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<string>("EstadoMuestra")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ExamenId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaResultado")
                         .HasColumnType("datetime2");
@@ -276,8 +217,6 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<long>("SolicitudExamenId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
-
                     b.HasIndex("ExamenId");
 
                     b.HasIndex("PersonalLaboratorioId");
@@ -289,22 +228,10 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Factura", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<decimal>("Monto")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("NroFactura")
@@ -313,8 +240,6 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<long>("SolicitudExamenId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
-
                     b.HasIndex("SolicitudExamenId");
 
                     b.ToTable("Facturas");
@@ -322,38 +247,19 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Muestra", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<string>("NombreMuestra")
                         .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.HasKey("Id");
-
                     b.ToTable("Muestras");
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Persona", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<string>("Apellido")
                         .IsRequired()
@@ -362,15 +268,6 @@ namespace TempLaboClini.Infrastructure.Migrations
 
                     b.Property<long>("DireccionId")
                         .HasColumnType("bigint");
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaNacimiento")
                         .HasColumnType("datetime2");
@@ -387,44 +284,25 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
-
                     b.HasIndex("DireccionId");
 
-                    b.ToTable("Personas");
-
-                    b.UseTptMappingStrategy();
+                    b.ToTable("Persona", (string)null);
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Prueba", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<bool>("Agrupado")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Eliminado")
                         .HasColumnType("bit");
 
                     b.Property<long>("ExamenId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("NombrePrueba")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("ExamenId");
 
@@ -433,23 +311,10 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Resultado", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<long>("ExamenSolicitadoId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaResultado")
                         .HasColumnType("datetime2");
@@ -475,8 +340,6 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<long>("ValorReferenciaId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
-
                     b.HasIndex("ExamenSolicitadoId");
 
                     b.HasIndex("PersonalLaboratorioId");
@@ -488,23 +351,10 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.SolicitudExamen", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<long>("AseguradoraId")
                         .HasColumnType("bigint");
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaRecepcion")
                         .HasColumnType("datetime2");
@@ -526,8 +376,6 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<long>("PacienteId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
-
                     b.HasIndex("AseguradoraId");
 
                     b.HasIndex("MedicoId");
@@ -539,26 +387,15 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.ValorReferencia", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.HasBaseType("TempLaboClini.Domain.Entities.BaseEntity");
 
                     b.Property<decimal>("EdadMaximaAnios")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("EdadMinimaAnios")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("Eliminado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaModificacion")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Interpretacion")
                         .HasColumnType("nvarchar(max)");
@@ -581,14 +418,14 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<string>("ValorMaximo")
                         .IsRequired()
                         .HasMaxLength(50)
+                        .HasPrecision(18, 2)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ValorMinimo")
                         .IsRequired()
                         .HasMaxLength(50)
+                        .HasPrecision(18, 2)
                         .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("PruebaId");
 
@@ -609,7 +446,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.ToTable("Medico");
+                    b.ToTable("Medico", (string)null);
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Paciente", b =>
@@ -625,7 +462,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
-                    b.ToTable("Pacientes");
+                    b.ToTable("Paciente", (string)null);
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.PersonalLaboratorio", b =>
@@ -642,7 +479,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.ToTable("PersonalLaboratorios");
+                    b.ToTable("PersonalLaboratorio", (string)null);
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Usuario", b =>
@@ -661,7 +498,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Property<string>("TipoUsuario")
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuario", (string)null);
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Aseguradora", b =>
@@ -675,11 +512,26 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Navigation("Direccion");
                 });
 
+            modelBuilder.Entity("TempLaboClini.Domain.Entities.Direccion", b =>
+                {
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.Direccion", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Examen", b =>
                 {
                     b.HasOne("TempLaboClini.Domain.Entities.Area", "Area")
                         .WithMany("Examenes")
                         .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.Examen", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -691,6 +543,12 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Examen", "Examen")
                         .WithMany("ExamenesMuestras")
                         .HasForeignKey("ExamenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.ExamenMuestra", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -713,6 +571,12 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.ExamenSolicitado", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TempLaboClini.Domain.Entities.PersonalLaboratorio", "PersonalLaboratorio")
                         .WithMany()
                         .HasForeignKey("PersonalLaboratorioId");
@@ -732,6 +596,12 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Factura", b =>
                 {
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.Factura", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TempLaboClini.Domain.Entities.SolicitudExamen", "SolicitudExamen")
                         .WithMany()
                         .HasForeignKey("SolicitudExamenId")
@@ -741,11 +611,26 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.Navigation("SolicitudExamen");
                 });
 
+            modelBuilder.Entity("TempLaboClini.Domain.Entities.Muestra", b =>
+                {
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.Muestra", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Persona", b =>
                 {
                     b.HasOne("TempLaboClini.Domain.Entities.Direccion", "Direccion")
                         .WithMany("Personas")
                         .HasForeignKey("DireccionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.Persona", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -760,6 +645,12 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.Prueba", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Examen");
                 });
 
@@ -768,19 +659,25 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.ExamenSolicitado", "ExamenSolicitado")
                         .WithMany("Resultados")
                         .HasForeignKey("ExamenSolicitadoId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.Resultado", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.PersonalLaboratorio", "PersonalLaboratorio")
                         .WithMany("Resultados")
                         .HasForeignKey("PersonalLaboratorioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.ValorReferencia", "ValorReferencia")
                         .WithMany()
                         .HasForeignKey("ValorReferenciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ExamenSolicitado");
@@ -795,6 +692,12 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Aseguradora", "Aseguradora")
                         .WithMany()
                         .HasForeignKey("AseguradoraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.SolicitudExamen", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -819,6 +722,12 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.ValorReferencia", b =>
                 {
+                    b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
+                        .WithOne()
+                        .HasForeignKey("TempLaboClini.Domain.Entities.ValorReferencia", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TempLaboClini.Domain.Entities.Prueba", "Prueba")
                         .WithMany("ValoresReferencia")
                         .HasForeignKey("PruebaId")
