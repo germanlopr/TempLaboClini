@@ -1,0 +1,22 @@
+﻿@model TempLaboClini.UIWeb.Models.SolicitudExamenViewModel
+
+<h2>Detalles de la Solicitud de Examen</h2>
+
+<dl class="row">
+    <dt class="col-sm-2">Paciente</dt>
+    <dd class="col-sm-10">@Model.Pacientes</dd>
+
+    <dt class="col-sm-2">Nro Identificación</dt>
+    <dd class="col-sm-10">@Model.PacienteNroIdentificacion</dd>
+
+    <dt class="col-sm-2">Fecha Solicitud</dt>
+    <dd class="col-sm-10">@Model.FechaSolicitud.ToString("yyyy-MM-dd")</dd>
+
+    <dt class="col-sm-2">Fecha Recepción</dt>
+    <dd class="col-sm-10">@Model.FechaRecepcion.ToString("yyyy-MM-dd")</dd>
+
+    <dt class="col-sm-2">Exámenes Solicitados</dt>
+    <dd class="col-sm-10">@string.Join(", ", Model.ExamenesSolicitados.Select(e => e.ExamenId))</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>

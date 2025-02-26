@@ -2,7 +2,7 @@
 
 namespace TempLaboClini.Domain.Interfaces
 {
-    public interface IPacienteRepository
+    public interface IPacienteRepository : IRepository<Paciente>
     {
         Paciente GetByIdentificacion(string nroIdentificacion);
     }

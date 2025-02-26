@@ -1,0 +1,27 @@
+﻿@model IEnumerable<SolicitudExamen>
+
+<h2>Lista de Solicitudes de Examen</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Paciente</th>
+            <th>Aseguradora</th>
+            <th>Médico</th>
+            <th>Número de Registro</th>
+            <th>Fecha de Solicitud</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var solicitud in Model)
+        {
+            <tr>
+                <td>@solicitud.PacienteId</td>
+                <td>@solicitud.AseguradoraId</td>
+                <td>@solicitud.MedicoId</td>
+                <td>@solicitud.NroRegistro</td>
+                <td>@solicitud.FechaSolicitud?.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+</table>

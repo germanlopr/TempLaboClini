@@ -1,0 +1,24 @@
+﻿@model SolicitudExamenDTO
+
+<h2>Crear Solicitud de Examen</h2>
+
+<form asp-action="CrearSolicitudExamen" method="post">
+    <div class="form-group">
+        <label>Número de Identificación del Paciente</label>
+        <input asp-for="PacienteNroIdentificacion" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Aseguradora</label>
+        <input asp-for="AseguradoraId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Médico</label>
+        <input asp-for="MedicoId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Número de Registro</label>
+        <input asp-for="NroRegistro" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Solicitud</button>
+</form>

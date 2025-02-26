@@ -1,6 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <Content Remove="Views\SolicitudExamen\CrearSolicitudExamen.cshtml" />
+    <Content Remove="Views\SolicitudExamen\DetallesSolicitudExamen.cshtml" />
+    <Content Remove="Views\SolicitudExamen\ListaPacientes.cshtml" />
+    <Content Remove="Views\SolicitudExamen\ListaSolicitudesExamen.cshtml" />
+    <Content Remove="Views\SolicitudExamen\RegistrarPaciente.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TempLaboClini.Application\TempLaboClini.Application.csproj" />
     <ProjectReference Include="..\TempLaboClini.Domain\TempLaboClini.Domain.csproj" />
     <ProjectReference Include="..\TempLaboClini.Infrastructure\TempLaboClini.Infrastructure.csproj" />

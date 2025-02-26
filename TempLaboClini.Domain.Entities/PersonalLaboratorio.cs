@@ -1,11 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TempLaboClini.Domain.Entities
-{ 
-    public class PersonalLaboratorio : BaseEntity
+{
+
+    // Entidad PersonalLaboratorio (Hereda de Persona)
+    public class PersonalLaboratorio : Persona
     {
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
+        [Required, MaxLength(20)]
         public string NroRegistro { get; set; }
-        public string Clave { get; set; }
-        public ICollection<Resultado> Resultados { get; set; }
+
+        [Required, MaxLength(100)]
+        public string Cargo { get; set; }
+
+        public virtual ICollection<Resultado> Resultados { get; set; } = new List<Resultado>();
     }
 }

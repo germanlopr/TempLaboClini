@@ -1,16 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TempLaboClini.Domain.Entities
 {
-    public class Paciente : BaseEntity
+    public class Paciente : Persona
     {
-        public string NroIdentificacion { get; set; }
-        public string Nombre { get; set; }
-        public string PrimerApellido { get; set; }
-        public string SegundoApellido { get; set; }
+
+        [Required]
         public char Sexo { get; set; }
+
+        [Required, MaxLength(20)]
         public string HistoriaClinica { get; set; }
-        public DateTime FechaNacimiento { get; set; }
-        public long DireccionId { get; set; }
-        public Direccion Direccion { get; set; }
-        public ICollection<SolicitudExamen> SolicitudesExamenes { get; set; }
+
+        // Relación con SolicitudExamen (Un paciente puede tener muchas solicitudes)
+        public virtual ICollection<SolicitudExamen> SolicitudesExamen { get; set; } = new List<SolicitudExamen>();
     }
 }

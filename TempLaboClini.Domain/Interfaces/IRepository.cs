@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using TempLaboClini.Domain.Entities;
 
 
 namespace TempLaboClini.Domain.Interfaces
@@ -12,5 +13,6 @@ namespace TempLaboClini.Domain.Interfaces
         T GetById(long id);
      //   IEnumerable<T> FindBy(QueryParam<T> QueryParam);
         IEnumerable<T> GetAll();   //TODO mejorar GetAll(int pageIndex = 0, int pageSize = 10);
+
     }
 }

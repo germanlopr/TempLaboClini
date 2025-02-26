@@ -1,0 +1,32 @@
+﻿@model PacienteDTO
+
+<h2>Registrar Paciente</h2>
+
+<form asp-action="RegistrarPaciente" method="post">
+    <div class="form-group">
+        <label>Número de Identificación</label>
+        <input asp-for="NroIdentificacion" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Nombre</label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Primer Apellido</label>
+        <input asp-for="PrimerApellido" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Segundo Apellido</label>
+        <input asp-for="SegundoApellido" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Sexo</label>
+        <input asp-for="Sexo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Fecha de Nacimiento</label>
+        <input asp-for="FechaNacimiento" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar</button>
+</form>

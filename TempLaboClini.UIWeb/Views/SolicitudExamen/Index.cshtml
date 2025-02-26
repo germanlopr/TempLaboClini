@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TempLaboClini.UIWeb.Models.SolicitudExamenViewModel>
+
+<h2>Lista de Solicitudes de Examen</h2>
+<a asp-action="Create" class="btn btn-primary">Crear Nueva Solicitud</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Paciente</th>
+            <th>Nro Identificación</th>
+            <th>Fecha Solicitud</th>
+            <th>Fecha Recepción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NombrePaciente</td>
+                <td>@item.PacienteNroIdentificacion</td>
+                <td>@item.FechaSolicitud.ToString("yyyy-MM-dd")</td>
+                <td>@item.FechaRecepcion.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.NroRegistro" class="btn btn-info">Ver</a>
+                    <a asp-action="Edit" asp-route-id="@item.NroRegistro" class="btn btn-warning">Editar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

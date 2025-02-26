@@ -7,59 +7,70 @@ namespace TempLaboClini.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
+
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
+
+
+        // Agregar DbSet<Entidad> aquí
+        public DbSet<Area> Areas { get; set; }
+        public DbSet<Aseguradora> Aseguradoras { get; set; }
+        public DbSet<Direccion> Direcciones { get; set; }
+        public DbSet<Examen> Examenes { get; set; }
+        public DbSet<ExamenMuestra> ExamenesMuestras { get; set; }
+        public DbSet<ExamenSolicitado> ExamenesSolicitados { get; set; }
+        public DbSet<Factura> Facturas { get; set; }
+        public DbSet<Medico> Medicos { get; set; }
+        public DbSet<Muestra> Muestras { get; set; }
+        public DbSet<Paciente> Pacientes { get; set; }
+        public DbSet<Persona> Personas { get; set; }
+        public DbSet<PersonalLaboratorio> PersonalLaboratorios { get; set; }
+        public DbSet<Prueba> Pruebas { get; set; }
+        public DbSet<Resultado> Resultados { get; set; }
+        public DbSet<SolicitudExamen> SolicitudesExamen { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<ValorReferencia> ValoresReferencia { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure entity relationships and constraints
+            // Configurar herencia TPT
+            modelBuilder.Entity<Persona>().ToTable("Persona");
+            modelBuilder.Entity<Medico>().ToTable("Medico");
+            modelBuilder.Entity<Paciente>().ToTable("Paciente");
+            modelBuilder.Entity<PersonalLaboratorio>().ToTable("PersonalLaboratorio");
 
-            modelBuilder.Entity<Examen>()
-                .HasOne(e => e.Area)
-                .WithMany(a => a.Examenes)
-                .HasForeignKey(e => e.AreaId);
+            modelBuilder.Entity<Usuario>().ToTable("Usuario");
 
-            modelBuilder.Entity<ExamenMuestra>()
-                .HasKey(em => new { em.ExamenId, em.MuestraId });
 
-            modelBuilder.Entity<ExamenMuestra>()
-                .HasOne(em => em.Examen)
-                .WithMany(e => e.ExamenesMuestras)
-                .HasForeignKey(em => em.ExamenId);
-
-            modelBuilder.Entity<ExamenMuestra>()
-                .HasOne(em => em.Muestra)
-                .WithMany(m => m.ExamenesMuestras)
-                .HasForeignKey(em => em.MuestraId);
-
-            modelBuilder.Entity<Paciente>()
-                .HasOne(p => p.Direccion)
-                .WithMany()
+            // Configurar relaciones
+            modelBuilder.Entity<Persona>().HasOne(p => p.Direccion)
+                .WithMany(d => d.Personas)
                 .HasForeignKey(p => p.DireccionId);
 
-            modelBuilder.Entity<Prueba>()
-                .HasOne(p => p.Examen)
-                .WithMany(e => e.Pruebas)
-                .HasForeignKey(p => p.ExamenId);
 
-            modelBuilder.Entity<SolicitudExamen>()
+            modelBuilder.Entity<SolicitudExamen>() 
                 .HasOne(se => se.Paciente)
-                .WithMany(p => p.SolicitudesExamenes)
-                .HasForeignKey(se => se.PacienteId);
+                .WithMany()
+                .HasForeignKey(se => se.PacienteId)
+                .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
 
             modelBuilder.Entity<SolicitudExamen>()
                 .HasOne(se => se.Aseguradora)
-                .WithMany(a => a.SolicitudesExamenes)
-                .HasForeignKey(se => se.AseguradoraId);
+                .WithMany()
+                .HasForeignKey(se => se.AseguradoraId)
+                .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
 
             modelBuilder.Entity<SolicitudExamen>()
                 .HasOne(se => se.Medico)
-                .WithMany(m => m.SolicitudesExamenes)
-                .HasForeignKey(se => se.MedicoId);
+                .WithMany()
+                .HasForeignKey(se => se.MedicoId)
+                .OnDelete(DeleteBehavior.NoAction); // Cambia a NoAction
 
             modelBuilder.Entity<ExamenSolicitado>()
                 .HasOne(es => es.SolicitudExamen)
@@ -79,27 +90,158 @@ namespace TempLaboClini.Infrastructure.Data
             modelBuilder.Entity<Resultado>()
                 .HasOne(r => r.ExamenSolicitado)
                 .WithMany(es => es.Resultados)
-                .HasForeignKey(r => r.ExamenSolicitadoId);
+                .HasForeignKey(r => r.ExamenSolicitadoId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Resultado>()
                 .HasOne(r => r.PersonalLaboratorio)
                 .WithMany(pl => pl.Resultados)
-                .HasForeignKey(r => r.PersonalLaboratorioId);
+                .HasForeignKey(r => r.PersonalLaboratorioId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Resultado>()
                 .HasOne(r => r.ValorReferencia)
                 .WithMany()
-                .HasForeignKey(r => r.ValorReferenciaId);
+                .HasForeignKey(r => r.ValorReferenciaId)
+                .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Persona>().HasOne(p => p.Direccion)
+                .WithMany(d => d.Personas)
+                .HasForeignKey(p => p.DireccionId);
+
+
+            // Configurar la precisión y el tipo de columna para PrecioExamen
+            modelBuilder.Entity<Examen>()
+                .Property(e => e.Precio)
+                .HasColumnType("decimal(18,2)");
+
+            // Configurar la precisión y el tipo de columna para Monto
             modelBuilder.Entity<Factura>()
-                .HasOne(f => f.SolicitudExamen)
-                .WithMany(se => se.Facturas)
-                .HasForeignKey(f => f.SolicitudExamenId);
+                .Property(f => f.Monto)
+                .HasColumnType("decimal(18,2)");
 
+            // Configurar la precisión y el tipo de columna para EdadMaximaAnios
+            modelBuilder.Entity<ValorReferencia>()
+                .Property(vr => vr.EdadMaximaAnios)
+                .HasColumnType("decimal(18,2)");
+
+            // Configurar la precisión y el tipo de columna para otras propiedades decimal en ValorReferencia
+            modelBuilder.Entity<ValorReferencia>()
+                .Property(vr => vr.EdadMinimaAnios)
+                .HasColumnType("decimal(18,2)");
+
+
+            modelBuilder.Entity<ValorReferencia>()
+                .Property(vr => vr.ValorMinimo)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<ValorReferencia>()
+                .Property(vr => vr.ValorMaximo)
+            .HasColumnType("decimal(18,2)");
+
+            // Configurar auditoría automática (opcional)
+            modelBuilder.Entity<BaseEntity>()
+                .Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            modelBuilder.Entity<BaseEntity>()
+                .Property(e => e.FechaModificacion)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            //***
+            //
+            //modelBuilder.Entity<Paciente>().ToTable("Pacientes");
+            //modelBuilder.Entity<PersonalLaboratorio>().ToTable("PersonalLaboratorio");
+
+            //modelBuilder.Entity<Muestra>()
+            //    .HasMany(m => m.ExamenesMuestra)
+            //    .WithOne(em => em.Muestra)
+            //    .HasForeignKey(em => em.MuestraId);
+
+            //modelBuilder.Entity<Prueba>()
+            //    .HasOne(p => p.Examen)
+            //    .WithMany(e => e.Pruebas)
+            //    .HasForeignKey(p => p.ExamenId);
+
+            //modelBuilder.Entity<Resultado>()
+            //    .HasOne(r => r.ExamenSolicitado)
+            //    .WithMany(es => es.Resultados)
+            //    .HasForeignKey(r => r.ExamenSolicitadoId)
+            //    .OnDelete(DeleteBehavior.NoAction);
+
+            //modelBuilder.Entity<Resultado>()
+            //    .HasOne(r => r.PersonalLaboratorio)
+            //    .WithMany(pl => pl.Resultados)
+            //    .HasForeignKey(r => r.PersonalLaboratorioId)
+            //    .OnDelete(DeleteBehavior.NoAction);
+
+            //modelBuilder.Entity<Resultado>()
+            //    .HasOne(r => r.ValorReferencia)
+            //    .WithMany()
+            //    .HasForeignKey(r => r.ValorReferenciaId)
+            //    .OnDelete(DeleteBehavior.NoAction);
+
+            //modelBuilder.Entity<SolicitudExamen>()
+            //    .HasOne(se => se.Paciente)
+            //    .WithMany(p => p.SolicitudesExamen)
+            //    .HasForeignKey(se => se.PacienteId);
+
+            //modelBuilder.Entity<SolicitudExamen>()
+            //    .HasOne(se => se.Aseguradora)
+            //    .WithMany()
+            //    .HasForeignKey(se => se.AseguradoraId);
+
+            //modelBuilder.Entity<SolicitudExamen>()
+            //    .HasOne(se => se.Medico)
+            //    .WithMany(m => m.SolicitudesExamen)
+            //    .HasForeignKey(se => se.MedicoId);
+
+            //modelBuilder.Entity<SolicitudExamen>()
+            //    .HasMany(se => se.ExamenesSolicitados)
+            //    .WithOne(es => es.SolicitudExamen)
+            //    .HasForeignKey(es => es.SolicitudExamenId);
+
+            //modelBuilder.Entity<ValorReferencia>()
+            //    .HasOne(vr => vr.Prueba)
+            //    .WithMany(p => p.ValoresReferencia)
+            //    .HasForeignKey(vr => vr.PruebaId);
+
+            //modelBuilder.Entity<ExamenSolicitado>()
+            //    .HasOne(es => es.Examen)
+            //    .WithMany(e => e.ExamenesSolicitados)
+            //    .HasForeignKey(es => es.ExamenId);
+
+            //modelBuilder.Entity<Factura>()
+            //    .Property(f => f.Monto)
+            //    .HasColumnType("decimal(18,2)");
+
+            //modelBuilder.Entity<ValorReferencia>()
+            //    .Property(vr => vr.EdadMaximaAnios)
+            //    .HasColumnType("decimal(18,2)");
+
+            //modelBuilder.Entity<ValorReferencia>()
+            //    .Property(vr => vr.EdadMinimaAnios)
+            //    .HasColumnType("decimal(18,2)");
+
+            //modelBuilder.Entity<ValorReferencia>()
+            //    .Property(vr => vr.ValorMinimo)
+            //    .HasColumnType("decimal(18,2)");
+
+            //modelBuilder.Entity<ValorReferencia>()
+            //    .Property(vr => vr.ValorMaximo)
+            //    .HasColumnType("decimal(18,2)");
+
+            //modelBuilder.Entity<BaseEntity>()
+            //    .Property(e => e.FechaCreacion)
+            //    .HasDefaultValueSql("GETUTCDATE()");
+
+            //modelBuilder.Entity<BaseEntity>()
+            //    .Property(e => e.FechaModificacion)
+            //    .HasDefaultValueSql("GETUTCDATE()");
         }
 
 
-         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
 
@@ -113,23 +255,6 @@ namespace TempLaboClini.Infrastructure.Data
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
-
-        // Agregar DbSet<Entidad> aquí
-        public DbSet<Area> Areas { get; set; }
-        public DbSet<Aseguradora> Aseguradoras { get; set; }
-        public DbSet<Direccion> Direcciones { get; set; }
-        public DbSet<Examen> Examenes { get; set; }
-        public DbSet<ExamenMuestra> ExamenesMuestras { get; set; }
-        public DbSet<ExamenSolicitado> ExamenesSolicitados { get; set; }
-        public DbSet<Factura> Facturas { get; set; }
-        public DbSet<Medico> Medicos { get; set; }
-        public DbSet<Muestra> Muestras { get; set; }
-        public DbSet<Paciente> Pacientes { get; set; }
-        public DbSet<PersonalLaboratorio> PersonalLaboratorio { get; set; }
-        public DbSet<Prueba> Pruebas { get; set; }
-        public DbSet<Resultado> Resultados { get; set; }
-        public DbSet<SolicitudExamen> SolicitudesExamenes { get; set; }
-        public DbSet<ValorReferencia> ValoresReferencia { get; set; }
 
     }
 }

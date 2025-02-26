@@ -1,0 +1,9 @@
+﻿@model SolicitudExamen
+
+<h2>Detalles de Solicitud de Examen</h2>
+
+<p><strong>Paciente ID:</strong> @Model.PacienteId</p>
+<p><strong>Aseguradora:</strong> @Model.AseguradoraId</p>
+<p><strong>Médico:</strong> @Model.MedicoId</p>
+<p><strong>Número de Registro:</strong> @Model.NroRegistro</p>
+<p><strong>Fecha de Solicitud:</strong> @Model.FechaSolicitud?.ToString("yyyy-MM-dd")</p>
