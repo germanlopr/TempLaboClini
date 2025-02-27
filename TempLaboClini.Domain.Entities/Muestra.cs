@@ -8,7 +8,8 @@ namespace TempLaboClini.Domain.Entities
         public string NombreMuestra { get; set; }
 
         // Relación con ExamenMuestra
-        public ICollection<ExamenMuestra> ExamenesMuestra { get; set; } = new List<ExamenMuestra>();
+        public ICollection<ExamenMuestra> ExamenesMuestras { get; set; } = new List<ExamenMuestra>();
+
     }
 }
 

@@ -18,11 +18,6 @@ namespace TempLaboClini.Domain.Entities
 
         public string CodigoCUPS { get; set; }
 
-        //TODO: Revisar si se necesita
-        //public string CodigoISS { get; set; }
-        //public string CodigoPOS { get; set; }
-
-
         // Relación con Área
         public Area Area { get; set; } = null!;
 

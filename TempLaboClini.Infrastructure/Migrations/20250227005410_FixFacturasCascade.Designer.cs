@@ -12,8 +12,8 @@ using TempLaboClini.Infrastructure.Data;
 namespace TempLaboClini.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250226224047_NewBased")]
-    partial class NewBased
+    [Migration("20250227005410_FixFacturasCascade")]
+    partial class FixFacturasCascade
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,7 +192,7 @@ namespace TempLaboClini.Infrastructure.Migrations
 
                     b.HasIndex("MuestraId");
 
-                    b.ToTable("ExamenesMuestras");
+                    b.ToTable("ExamenMuestra", (string)null);
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.ExamenSolicitado", b =>
@@ -306,7 +306,7 @@ namespace TempLaboClini.Infrastructure.Migrations
 
                     b.HasIndex("ExamenId");
 
-                    b.ToTable("Pruebas");
+                    b.ToTable("Pruebas", (string)null);
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Resultado", b =>
@@ -543,7 +543,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Examen", "Examen")
                         .WithMany("ExamenesMuestras")
                         .HasForeignKey("ExamenId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
@@ -553,9 +553,9 @@ namespace TempLaboClini.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.Muestra", "Muestra")
-                        .WithMany("ExamenesMuestra")
+                        .WithMany("ExamenesMuestras")
                         .HasForeignKey("MuestraId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Examen");
@@ -568,7 +568,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Examen", "Examen")
                         .WithMany("ExamenesSolicitados")
                         .HasForeignKey("ExamenId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
@@ -584,7 +584,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.SolicitudExamen", "SolicitudExamen")
                         .WithMany("ExamenesSolicitados")
                         .HasForeignKey("SolicitudExamenId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Examen");
@@ -605,7 +605,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.SolicitudExamen", "SolicitudExamen")
                         .WithMany()
                         .HasForeignKey("SolicitudExamenId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("SolicitudExamen");
@@ -625,7 +625,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Direccion", "Direccion")
                         .WithMany("Personas")
                         .HasForeignKey("DireccionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
@@ -642,7 +642,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Examen", "Examen")
                         .WithMany("Pruebas")
                         .HasForeignKey("ExamenId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
@@ -692,7 +692,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Aseguradora", "Aseguradora")
                         .WithMany()
                         .HasForeignKey("AseguradoraId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.BaseEntity", null)
@@ -704,13 +704,13 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Medico", "Medico")
                         .WithMany("SolicitudesExamen")
                         .HasForeignKey("MedicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TempLaboClini.Domain.Entities.Paciente", "Paciente")
                         .WithMany("SolicitudesExamen")
                         .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Aseguradora");
@@ -731,7 +731,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                     b.HasOne("TempLaboClini.Domain.Entities.Prueba", "Prueba")
                         .WithMany("ValoresReferencia")
                         .HasForeignKey("PruebaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Prueba");
@@ -801,7 +801,7 @@ namespace TempLaboClini.Infrastructure.Migrations
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Muestra", b =>
                 {
-                    b.Navigation("ExamenesMuestra");
+                    b.Navigation("ExamenesMuestras");
                 });
 
             modelBuilder.Entity("TempLaboClini.Domain.Entities.Prueba", b =>

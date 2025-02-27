@@ -9,24 +9,18 @@ namespace TempLaboClini.Domain.Entities
         [Required]
         public int NroRegistro { get; set; }
 
-        [Required]
-        public long PacienteId { get; set; }
-
-        [ForeignKey("PacienteId")]
-        public virtual Paciente Paciente { get; set; }
-
-        [Required]
-        public long AseguradoraId { get; set; }
-
-        [ForeignKey("AseguradoraId")]
+        public virtual Paciente Paciente { get; set; } 
         public virtual Aseguradora Aseguradora { get; set; }
+        public virtual Medico Medico { get; set; }
 
         [Required]
         public long MedicoId { get; set; }
+        [Required]
+        public long PacienteId { get; set; }
+        [Required]
+        public long AseguradoraId { get; set; }
 
-        [ForeignKey("MedicoId")]
-        public virtual Medico Medico { get; set; }
-
+   
         [Required, MaxLength(16)]
         public string IngresoPor { get; set; }
 

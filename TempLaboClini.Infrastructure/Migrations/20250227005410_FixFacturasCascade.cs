@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TempLaboClini.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class NewBased : Migration
+    public partial class FixFacturasCascade : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -166,7 +166,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         column: x => x.DireccionId,
                         principalTable: "Direccion",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,12 +191,11 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_Pruebas_Examenes_ExamenId",
                         column: x => x.ExamenId,
                         principalTable: "Examenes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExamenesMuestras",
+                name: "ExamenMuestra",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -205,25 +204,25 @@ namespace TempLaboClini.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExamenesMuestras", x => x.Id);
+                    table.PrimaryKey("PK_ExamenMuestra", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExamenesMuestras_BaseEntity_Id",
+                        name: "FK_ExamenMuestra_BaseEntity_Id",
                         column: x => x.Id,
                         principalTable: "BaseEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ExamenesMuestras_Examenes_ExamenId",
+                        name: "FK_ExamenMuestra_Examenes_ExamenId",
                         column: x => x.ExamenId,
                         principalTable: "Examenes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExamenesMuestras_Muestras_MuestraId",
+                        name: "FK_ExamenMuestra_Muestras_MuestraId",
                         column: x => x.MuestraId,
                         principalTable: "Muestras",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -332,8 +331,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_ValoresReferencia_Pruebas_PruebaId",
                         column: x => x.PruebaId,
                         principalTable: "Pruebas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -342,9 +340,9 @@ namespace TempLaboClini.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
                     NroRegistro = table.Column<int>(type: "int", nullable: false),
+                    MedicoId = table.Column<long>(type: "bigint", nullable: false),
                     PacienteId = table.Column<long>(type: "bigint", nullable: false),
                     AseguradoraId = table.Column<long>(type: "bigint", nullable: false),
-                    MedicoId = table.Column<long>(type: "bigint", nullable: false),
                     IngresoPor = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     FechaSolicitud = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaRecepcion = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -356,8 +354,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_SolicitudesExamen_Aseguradoras_AseguradoraId",
                         column: x => x.AseguradoraId,
                         principalTable: "Aseguradoras",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SolicitudesExamen_BaseEntity_Id",
                         column: x => x.Id,
@@ -368,14 +365,12 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_SolicitudesExamen_Medico_MedicoId",
                         column: x => x.MedicoId,
                         principalTable: "Medico",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SolicitudesExamen_Paciente_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Paciente",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -403,8 +398,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_ExamenesSolicitados_Examenes_ExamenId",
                         column: x => x.ExamenId,
                         principalTable: "Examenes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ExamenesSolicitados_PersonalLaboratorio_PersonalLaboratorioId",
                         column: x => x.PersonalLaboratorioId,
@@ -414,8 +408,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_ExamenesSolicitados_SolicitudesExamen_SolicitudExamenId",
                         column: x => x.SolicitudExamenId,
                         principalTable: "SolicitudesExamen",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -440,8 +433,7 @@ namespace TempLaboClini.Infrastructure.Migrations
                         name: "FK_Facturas_SolicitudesExamen_SolicitudExamenId",
                         column: x => x.SolicitudExamenId,
                         principalTable: "SolicitudesExamen",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -494,16 +486,6 @@ namespace TempLaboClini.Infrastructure.Migrations
                 column: "AreaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamenesMuestras_ExamenId",
-                table: "ExamenesMuestras",
-                column: "ExamenId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExamenesMuestras_MuestraId",
-                table: "ExamenesMuestras",
-                column: "MuestraId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ExamenesSolicitados_ExamenId",
                 table: "ExamenesSolicitados",
                 column: "ExamenId");
@@ -517,6 +499,16 @@ namespace TempLaboClini.Infrastructure.Migrations
                 name: "IX_ExamenesSolicitados_SolicitudExamenId",
                 table: "ExamenesSolicitados",
                 column: "SolicitudExamenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamenMuestra_ExamenId",
+                table: "ExamenMuestra",
+                column: "ExamenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamenMuestra_MuestraId",
+                table: "ExamenMuestra",
+                column: "MuestraId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Facturas_SolicitudExamenId",
@@ -573,7 +565,7 @@ namespace TempLaboClini.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ExamenesMuestras");
+                name: "ExamenMuestra");
 
             migrationBuilder.DropTable(
                 name: "Facturas");
