@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TempLaboClini.Infrastructure/Migrations/20250227005410_FixFacturasCascade.cs
+/TempLaboClini.Infrastructure/Migrations/20250227011308_FixBaseEntityMapping.cs
+/TempLaboClini.Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs

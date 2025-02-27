@@ -39,11 +39,15 @@ namespace TempLaboClini.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Excluir BaseEntity del modelo
+            modelBuilder.Ignore<BaseEntity>();
+
             // Configurar herencia TPT
             modelBuilder.Entity<Persona>().ToTable("Persona");
             modelBuilder.Entity<Medico>().ToTable("Medico");
             modelBuilder.Entity<Paciente>().ToTable("Paciente");
             modelBuilder.Entity<PersonalLaboratorio>().ToTable("PersonalLaboratorio");
+
             // Configurar herencia TPT (si aplica)
             modelBuilder.Entity<ExamenMuestra>().ToTable("ExamenMuestra");
 
@@ -193,14 +197,7 @@ namespace TempLaboClini.Infrastructure.Data
                 .HasForeignKey(se => se.AseguradoraId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Configurar auditoría automática(opcional)
-            modelBuilder.Entity<BaseEntity>()
-                .Property(e => e.FechaCreacion)
-                .HasDefaultValueSql("GETUTCDATE()");
 
-            modelBuilder.Entity<BaseEntity>()
-                .Property(e => e.FechaModificacion)
-                .HasDefaultValueSql("GETUTCDATE()");
         }
 
 
