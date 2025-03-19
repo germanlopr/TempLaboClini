@@ -13,5 +13,8 @@ namespace TempLaboClini.Domain.Entities
         public string Cargo { get; set; }
 
         public virtual ICollection<Resultado> Resultados { get; set; } = new List<Resultado>();
+
+        public ICollection<ExamenMuestra> MuestrasTomadas { get; set; } = new List<ExamenMuestra>();
+
     }
 }

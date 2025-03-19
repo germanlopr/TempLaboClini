@@ -197,6 +197,29 @@ namespace TempLaboClini.Infrastructure.Data
                 .HasForeignKey(se => se.AseguradoraId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            // **NUEVAS RELACIONES PROPUESTAS**
+
+            // Relación entre ExamenSolicitado y ExamenMuestra (cada examen solicitado puede tener varias muestras asociadas)
+            modelBuilder.Entity<ExamenMuestra>()
+                .HasOne(em => em.ExamenSolicitado)
+                .WithMany(es => es.ExamenesMuestras)
+                .HasForeignKey(em => em.ExamenSolicitadoId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            // Relación entre ExamenMuestra y PersonalLaboratorio (quién tomó la muestra)
+            modelBuilder.Entity<ExamenMuestra>()
+                .HasOne(em => em.PersonalLaboratorio)
+                .WithMany(pl => pl.MuestrasTomadas)
+                .HasForeignKey(em => em.PersonalLaboratorioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación entre Resultado y ExamenMuestra (cada resultado corresponde a una muestra tomada específica)
+            modelBuilder.Entity<Resultado>()
+                .HasOne(r => r.ExamenMuestra)
+                .WithMany(em => em.Resultados)
+                .HasForeignKey(r => r.ExamenMuestraId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
         }
 

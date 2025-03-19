@@ -34,5 +34,11 @@ namespace TempLaboClini.Domain.Entities
         public virtual ValorReferencia ValorReferencia { get; set; }
 
         public DateTime FechaResultado { get; set; }
+
+        public long ExamenMuestraId { get; set; }
+
+        //  Relación uno a uno con ExamenesMuestras
+        public ExamenMuestra ExamenMuestra { get; set; }
+
     }
 }

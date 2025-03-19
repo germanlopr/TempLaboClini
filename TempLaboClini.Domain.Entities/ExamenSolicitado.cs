@@ -20,6 +20,9 @@
 
         // Relación uno a muchos con Resultado
         public ICollection<Resultado> Resultados { get; set; } = new List<Resultado>();
+
+        // Relación uno a muchos con ExamenesMuestras
+        public ICollection<ExamenMuestra> ExamenesMuestras { get; set; }
     }
 
 
