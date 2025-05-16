@@ -18,7 +18,7 @@ builder.Services.AddScoped<ISolicitudExamenRepository, SolicitudExamenRepository
 
 
 builder.Services.AddScoped<IExamenRepository, ExamenRepository>();
-builder.Services.AddScoped<IExamenSolicitadoRepository, ExamenSolicitadoRepository>();
+builder.Services.AddScoped<IExamenSolicitadoLineRepository, ExamenSolicitadoRepository>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
