@@ -7,7 +7,7 @@ using TempLaboClini.Domain.Entities;
 
 namespace TempLaboClini.Domain.Interfaces
 {
-    public interface IExamenRepository : IRepository<Examen>
+    public interface IExamenRepository : IGenericRepository<BaseEntity, Examen>
     {
         IEnumerable<Muestra> GetMuestras(long examenId);
         Area GetArea(long examenId);

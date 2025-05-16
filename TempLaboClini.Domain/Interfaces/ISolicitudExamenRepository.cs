@@ -7,7 +7,8 @@ using TempLaboClini.Domain.Entities;
 
 namespace TempLaboClini.Domain.Interfaces
 {
-    public interface ISolicitudExamenRepository : IRepository<SolicitudExamen>
+    // Updated to provide the required two type arguments for IGenericRepository
+    public interface ISolicitudExamenRepository : IGenericRepository<BaseEntity, SolicitudExamen>
     {
         Task<IEnumerable<SolicitudExamen>> GetByPacienteIdAsync(long pacienteId);
         Task<IEnumerable<SolicitudExamen>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);

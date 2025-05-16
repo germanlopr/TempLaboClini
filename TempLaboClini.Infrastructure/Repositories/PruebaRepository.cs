@@ -3,7 +3,7 @@ using TempLaboClini.Infrastructure.Data;
 
 namespace TempLaboClini.Infrastructure.Repositories
 {
-    public class PruebaRepository : BaseRepository<Prueba>
+    public class PruebaRepository : GenericRepository<Prueba, Prueba>
     {
         public PruebaRepository(ApplicationDbContext context) : base(context)
         {

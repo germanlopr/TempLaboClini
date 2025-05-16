@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using TempLaboClini.Domain.Entities;
 using TempLaboClini.Domain.Interfaces;
 using TempLaboClini.Infrastructure.Data;
 
 namespace TempLaboClini.Infrastructure.Repositories
 {
-    public class ExamenRepository : BaseRepository<Examen>, IExamenRepository
+    public class ExamenRepository : GenericRepository<BaseEntity, Examen>, IExamenRepository
     {
         public ExamenRepository(ApplicationDbContext context) : base(context)
         {
@@ -53,5 +54,6 @@ namespace TempLaboClini.Infrastructure.Repositories
 
             return Enumerable.Empty<ValorReferencia>();
         }
+
     }
 }

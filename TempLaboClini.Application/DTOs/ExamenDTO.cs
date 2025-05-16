@@ -3,7 +3,7 @@ using TempLaboClini.Domain.Entities;
 
 namespace TempLaboClini.Application.DTOs
 {
-    public class ExamenDto
+    public class ExamenDTO
     {
         public long AseguradoraId { get; internal set; }
         public long MedicoId { get; internal set; }

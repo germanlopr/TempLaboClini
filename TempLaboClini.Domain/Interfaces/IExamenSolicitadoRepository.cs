@@ -2,7 +2,7 @@
 
 namespace TempLaboClini.Domain.Interfaces
 {
-    public interface IExamenSolicitadoRepository : IRepository<ExamenSolicitado>
+    public interface IExamenSolicitadoRepository : IGenericRepository<BaseEntity, ExamenSolicitado>
     {
 
     }

@@ -4,7 +4,7 @@ using TempLaboClini.Infrastructure.Data;
 
 namespace TempLaboClini.Infrastructure.Repositories
 {
-    public class PersonalLaboratorioRepository : BaseRepository<PersonalLaboratorio>
+    public class PersonalLaboratorioRepository : GenericRepository<PersonalLaboratorio, PersonalLaboratorio>
     {
         public PersonalLaboratorioRepository(ApplicationDbContext context) : base(context)
         {

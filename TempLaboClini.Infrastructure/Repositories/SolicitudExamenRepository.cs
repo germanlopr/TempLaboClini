@@ -9,7 +9,7 @@ using TempLaboClini.Infrastructure.Data;
 
 namespace TempLaboClini.Infrastructure.Repositories
 {
-    public class SolicitudExamenRepository : BaseRepository<SolicitudExamen>, ISolicitudExamenRepository
+    public class SolicitudExamenRepository : GenericRepository<SolicitudExamen, SolicitudExamen>, ISolicitudExamenRepository
     {
         public SolicitudExamenRepository(ApplicationDbContext context) : base(context)
         {

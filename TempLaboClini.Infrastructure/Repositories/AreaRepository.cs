@@ -10,7 +10,7 @@ using TempLaboClini.Infrastructure.Data;
 
 namespace TempLaboClini.Infrastructure.Repositories
 {
-    public class AreaRepository : BaseRepository<Area>
+    public class AreaRepository : GenericRepository<BaseEntity, Area>
     {
         public AreaRepository(ApplicationDbContext context) : base(context)
         {

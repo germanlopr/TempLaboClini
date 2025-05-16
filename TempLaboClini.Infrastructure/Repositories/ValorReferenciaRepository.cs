@@ -5,7 +5,7 @@ using TempLaboClini.Infrastructure.Data;
 
 namespace TempLaboClini.Infrastructure.Repositories
 {
-    public class ValorReferenciaRepository : BaseRepository<ValorReferencia>
+    public class ValorReferenciaRepository : GenericRepository<ValorReferencia, ValorReferencia>
     {
         public ValorReferenciaRepository(ApplicationDbContext context) : base(context)
         {

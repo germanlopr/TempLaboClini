@@ -10,18 +10,20 @@ namespace TempLaboClini.Infrastructure.Repositories
     using TempLaboClini.Domain.Interfaces;
     using TempLaboClini.Infrastructure.Data;
 
-    public class BaseRepository<T> : IRepository<T> where T : class
+    public class GenericRepository<TBase, TChild> : IGenericRepository<TBase, TChild>
+            where TBase : class
+            where TChild : class, TBase 
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly DbSet<T> _dbSet;
+        protected readonly DbSet<TChild> _dbSet;
 
-        public BaseRepository(ApplicationDbContext context)
+        public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
-            _dbSet = _context.Set<T>();
+            _dbSet = _context.Set<TChild>();
         }
 
-        public void Add(T entity)
+        public void Add(TChild entity)
         {
             _dbSet.Add(entity);
             _context.SaveChanges();
@@ -37,27 +39,18 @@ namespace TempLaboClini.Infrastructure.Repositories
             }
         }
 
-        public void Update(T entity)
+        public void Update(TChild entity)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
         }
 
-        public int Count(Expression<Func<T, bool>> where)
-        {
-            return _dbSet.Count(where);
-        }
+        public TChild GetById(long id) => _dbSet.Find(id);
 
-        public T GetById(long id)
-        {
-            return _dbSet.Find(id);
-        }
+        public IEnumerable<TChild> GetAll() => _dbSet.ToList();
 
-        public IEnumerable<T> GetAll()
-        {
-            return _dbSet.ToList();
-        }
+        public int Count(Expression<Func<TChild, bool>> predicate) => _dbSet.Count(predicate);
     }
 
 }
